@@ -22,6 +22,17 @@ function randomName() {
   return Math.random().toString(36).substring(2, 12);
 }
 
+async function createStore() {
+  let storeName = randomName();
+  let number = Math.floor(Math.random() * 100);
+
+  const newStore = await request(app)
+    .post("/api/franchise/" + franchise.id + "/store")
+    .set("Authorization", `Bearer ${adminToken}`)
+    .send({ franchiseId: number, name: storeName });
+  return newStore;
+}
+
 beforeAll(async () => {
   testUser.email = Math.random().toString(36).substring(2, 12) + "@test.com";
   const registerRes = await request(app).post("/api/auth").send(testUser);
@@ -50,20 +61,9 @@ beforeEach(async () => {
   franchise = franchiseRes.body;
 });
 
-async function createStore() {
-  let storeName = randomName();
-  let number = Math.floor(Math.random() * 100);
-
-  const newStore = await request(app)
-    .post("/api/franchise/" + franchise.id + "/store")
-    .set("Authorization", `Bearer ${adminToken}`)
-    .send({ franchiseId: number, name: storeName });
-  return newStore;
-}
-
 test("list franchises", async () => {
   const franRes = await request(app).get("/api/franchise");
-  console.log(franRes); // Guess it works but I want to figure out how to actually list them
+  console.log(franRes.body); // Guess it works but I want to figure out how to actually list them
   expect(franRes.status).toBe(200);
 });
 
