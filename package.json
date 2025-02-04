@@ -11,12 +11,22 @@
   "license": "MIT",
   "dependencies": {
     "bcrypt": "^5.1.1",
-    "express": "^4.19.2",
+    "express": "^4.21.2",
     "jsonwebtoken": "^9.0.2",
     "mysql2": "^3.9.7"
   },
   "devDependencies": {
     "jest": "^29.7.0",
-    "supertest": "^6.3.4"
-  }
+    "supertest": "^7.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/folskeat/jwt-pizza-service.git"
+  },
+  "keywords": [],
+  "author": "",
+  "bugs": {
+    "url": "https://github.com/folskeat/jwt-pizza-service/issues"
+  },
+  "homepage": "https://github.com/folskeat/jwt-pizza-service#readme"
 }
