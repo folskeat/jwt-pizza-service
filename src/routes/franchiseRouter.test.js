@@ -6,7 +6,6 @@ const testUser = { name: "pizza diner", email: "reg@test.com", password: "a" };
 let testUserAuthToken;
 let adminToken;
 let adminUser;
-let userID;
 let franchise;
 
 async function createAdminUser() {
@@ -37,7 +36,6 @@ beforeAll(async () => {
   testUser.email = Math.random().toString(36).substring(2, 12) + "@test.com";
   const registerRes = await request(app).post("/api/auth").send(testUser);
   testUserAuthToken = registerRes.body.token; //Use admin instead of test user
-  userID = registerRes.body.user.id;
 
   // Admin
   const newAdmin = await createAdminUser();

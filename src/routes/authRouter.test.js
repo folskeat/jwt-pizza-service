@@ -3,10 +3,8 @@ const app = require("../service");
 const { Role, DB } = require("../database/database.js");
 
 const testUser = { name: "pizza diner", email: "reg@test.com", password: "a" };
-let testUserAuthToken;
 let adminToken;
 let adminUser;
-let userID;
 
 async function createAdminUser() {
   let user = { password: "toomanysecrets", roles: [{ role: Role.Admin }] };
@@ -22,11 +20,6 @@ function randomName() {
 }
 
 beforeAll(async () => {
-  testUser.email = Math.random().toString(36).substring(2, 12) + "@test.com";
-  const registerRes = await request(app).post("/api/auth").send(testUser);
-  testUserAuthToken = registerRes.body.token; //Use admin instead of test user
-  userID = registerRes.body.user.id;
-
   // Admin
   const newAdmin = await createAdminUser();
   console.log(newAdmin);
@@ -44,6 +37,10 @@ test("register fail", async () => {
 });
 
 test("login", async () => {
+  testUser.email = Math.random().toString(36).substring(2, 12) + "@test.com";
+  const registerRes = await request(app).post("/api/auth").send(testUser);
+  expect(registerRes.body.user.email).toBe(testUser.email);
+
   const loginRes = await request(app).put("/api/auth").send(testUser);
   expect(loginRes.status).toBe(200);
   expect(loginRes.body.token).toMatch(
@@ -51,6 +48,7 @@ test("login", async () => {
   );
 
   const { password, ...user } = { ...testUser, roles: [{ role: "diner" }] };
+  expect(testUser.password).toBe(password);
   expect(loginRes.body.user).toMatchObject(user);
 });
 

@@ -3,10 +3,8 @@ const app = require("../service");
 const { Role, DB } = require("../database/database.js");
 
 const testUser = { name: "pizza diner", email: "reg@test.com", password: "a" };
-let testUserAuthToken;
 let adminToken;
 let adminUser;
-let userID;
 let franchise;
 
 async function createAdminUser() {
@@ -64,9 +62,6 @@ beforeAll(async () => {
   }
 
   testUser.email = Math.random().toString(36).substring(2, 12) + "@test.com";
-  const registerRes = await request(app).post("/api/auth").send(testUser);
-  testUserAuthToken = registerRes.body.token; //Use admin instead of test user
-  userID = registerRes.body.user.id;
 
   // Admin
   const newAdmin = await createAdminUser();
@@ -110,34 +105,17 @@ test("get orders", async () => {
   console.log(getOrder.body);
   expect(getOrder.status).toBe(200);
 });
-/* WORK ON THIS
+// WORK ON THIS
 test("create orders", async () => {
   let menu = await getMenu();
   let menuItem = menu.body[0];
   console.log(menu.body.length);
   console.log(menuItem);
 
-  // Pick a random order to use
-  let orderNumber = Math.floor(Math.random() * menu.body.length);
-  //console.log(orderNumber);
-  //console.log(menu.body);
-  //console.log(menu.body[orderNumber - 1]);
-
-  //let chooseFrom = Math.floor(Math.random() * 100);
-  let newName = randomName();
-  let newPrice = randomPrice();
-
   let newFranchise = await createFranchise();
   let newStore = await createStore();
   //console.log(newFranchise.body);
   //console.log(newStore.body);
-
-  // Create parts
-  console.log(newFranchise.body.id);
-  console.log(newStore.body.id);
-  console.log(menuItem.id);
-  console.log(menuItem.description);
-  console.log(menuItem.price);
 
   const createOrder = await request(app)
     .post("/api/order")
@@ -153,6 +131,6 @@ test("create orders", async () => {
         },
       ],
     });
-  //console.log(createOrder.body);
+  console.log(createOrder.body);
   expect(createOrder.status).toBe(200);
-});*/
+});
