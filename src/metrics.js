@@ -1,14 +1,7 @@
 const config = require("./config");
-/*
-let requests = {};
-let latency = 0;
 
-function track(endpoint) {
-  return (req, res, next) => {
-    requests[endpoint] = (requests[endpoint] || 0) + 1;
-    next();
-  };
-}
+let requests = 0;
+let latency = 0;
 
 setInterval(() => {
   const cpuValue = Math.floor(Math.random() * 100) + 1;
@@ -56,75 +49,27 @@ function sendMetricToGrafana(metricName, metricValue, type, unit) {
     ].isMonotonic = true;
   }
 
-  /*
-  Object.keys(attributes).forEach((key) => {
-    metric.resourceMetrics[0].scopeMetrics[0].metrics[0].sum.dataPoints[0].attributes.push(
-      {
-        key: key,
-        value: { stringValue: attributes[key] },
-      }
-    );
-  });
-  
-
-const body = JSON.stringify(metric);
-fetch(`${config.url}`, {
-  method: "POST",
-  body: body,
-  headers: {
-    Authorization: `Bearer ${config.apiKey}`,
-    "Content-Type": "application/json",
-  },
-})
-  .then((response) => {
-    if (!response.ok) {
-      response.text().then((text) => {
-        console.error(
-          `Failed to push metrics data to Grafana: ${text}\n${body}`
-        );
-      });
-    } else {
-      console.log(`Pushed ${metricName}`);
-    }
+  const body = JSON.stringify(metric);
+  fetch(`${config.url}`, {
+    method: "POST",
+    body: body,
+    headers: {
+      Authorization: `Bearer ${config.apiKey}`,
+      "Content-Type": "application/json",
+    },
   })
-  .catch((error) => {
-    console.error("Error pushing metrics:", error);
-  });
-
-/*
-  const os = require("os");
-
-  function getCpuUsagePercentage() {
-    const cpuUsage = os.loadavg()[0] / os.cpus().length;
-    return cpuUsage.toFixed(2) * 100;
-  }
-
-  function getMemoryUsagePercentage() {
-    const totalMemory = os.totalmem();
-    const freeMemory = os.freemem();
-    const usedMemory = totalMemory - freeMemory;
-    const memoryUsage = (usedMemory / totalMemory) * 100;
-    return memoryUsage.toFixed(2);
-  }
-
-  function sendMetricsPeriodically(period) {
-    const timer = setInterval(() => {
-      try {
-        const buf = new MetricBuilder();
-        httpMetrics(buf);
-        systemMetrics(buf);
-        userMetrics(buf);
-        purchaseMetrics(buf);
-        authMetrics(buf);
-
-        const metrics = buf.toString("\n");
-        this.sendMetricToGrafana(metrics);
-      } catch (error) {
-        console.log("Error sending metrics", error);
+    .then((response) => {
+      if (!response.ok) {
+        response.text().then((text) => {
+          console.error(
+            `Failed to push metrics data to Grafana: ${text}\n${body}`
+          );
+        });
+      } else {
+        console.log(`Pushed ${metricName}`);
       }
-    }, period);
-  }
+    })
+    .catch((error) => {
+      console.error("Error pushing metrics:", error);
+    });
 }
-
-module.exports = { track };
-*/
