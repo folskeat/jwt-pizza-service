@@ -89,6 +89,7 @@ function sendMetricToGrafana(metricName, metricValue, type, unit) {
       console.error("Error pushing metrics:", error);
     });
 
+  /*
   const os = require("os");
 
   function getCpuUsagePercentage() {
@@ -120,7 +121,7 @@ function sendMetricToGrafana(metricName, metricValue, type, unit) {
         console.log("Error sending metrics", error);
       }
     }, period);
-  }
+  }*/
 }
 
 module.exports = { track };
