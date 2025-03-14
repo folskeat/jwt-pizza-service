@@ -56,6 +56,7 @@ function sendMetricToGrafana(metricName, metricValue, type, unit) {
     ].isMonotonic = true;
   }
 
+  /*
   Object.keys(attributes).forEach((key) => {
     metric.resourceMetrics[0].scopeMetrics[0].metrics[0].sum.dataPoints[0].attributes.push(
       {
@@ -64,6 +65,7 @@ function sendMetricToGrafana(metricName, metricValue, type, unit) {
       }
     );
   });
+  */
 
   const body = JSON.stringify(metric);
   fetch(`${config.url}`, {
