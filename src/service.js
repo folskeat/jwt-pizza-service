@@ -22,7 +22,7 @@ apiRouter.use("/auth", authRouter);
 apiRouter.use("/order", orderRouter);
 apiRouter.use("/franchise", franchiseRouter);
 
-app.use(metrics.requestTracker);
+//app.use(metrics.requestTracker);
 
 apiRouter.use("/docs", (req, res) => {
   res.json({

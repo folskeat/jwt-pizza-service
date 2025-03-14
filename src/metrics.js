@@ -65,7 +65,7 @@ function sendMetricToGrafana(metricName, metricValue, type, unit) {
       }
     );
   });
-  */
+  
 
 const body = JSON.stringify(metric);
 fetch(`${config.url}`, {
