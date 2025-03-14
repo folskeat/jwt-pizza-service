@@ -1,5 +1,5 @@
 const config = require("./config");
-
+/*
 let requests = {};
 let latency = 0;
 
@@ -67,31 +67,31 @@ function sendMetricToGrafana(metricName, metricValue, type, unit) {
   });
   */
 
-  const body = JSON.stringify(metric);
-  fetch(`${config.url}`, {
-    method: "POST",
-    body: body,
-    headers: {
-      Authorization: `Bearer ${config.apiKey}`,
-      "Content-Type": "application/json",
-    },
+const body = JSON.stringify(metric);
+fetch(`${config.url}`, {
+  method: "POST",
+  body: body,
+  headers: {
+    Authorization: `Bearer ${config.apiKey}`,
+    "Content-Type": "application/json",
+  },
+})
+  .then((response) => {
+    if (!response.ok) {
+      response.text().then((text) => {
+        console.error(
+          `Failed to push metrics data to Grafana: ${text}\n${body}`
+        );
+      });
+    } else {
+      console.log(`Pushed ${metricName}`);
+    }
   })
-    .then((response) => {
-      if (!response.ok) {
-        response.text().then((text) => {
-          console.error(
-            `Failed to push metrics data to Grafana: ${text}\n${body}`
-          );
-        });
-      } else {
-        console.log(`Pushed ${metricName}`);
-      }
-    })
-    .catch((error) => {
-      console.error("Error pushing metrics:", error);
-    });
+  .catch((error) => {
+    console.error("Error pushing metrics:", error);
+  });
 
-  /*
+/*
   const os = require("os");
 
   function getCpuUsagePercentage() {
@@ -123,7 +123,8 @@ function sendMetricToGrafana(metricName, metricValue, type, unit) {
         console.log("Error sending metrics", error);
       }
     }, period);
-  }*/
+  }
 }
 
 module.exports = { track };
+*/
