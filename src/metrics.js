@@ -1,6 +1,6 @@
 const config = require("./config");
 
-export class Metrics {
+class Metrics {
   requests = 0;
   latency = 0;
 
@@ -94,3 +94,5 @@ export class Metrics {
       });
   }
 }
+
+module.exports = Metrics;
