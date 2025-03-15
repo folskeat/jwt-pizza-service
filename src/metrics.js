@@ -24,13 +24,13 @@ class Metrics {
   static interval() {
     setInterval(() => {
       const cpuValue = Math.floor(Math.random() * 100) + 1;
-      sendMetricToGrafana("cpu", cpuValue, "gauge", "%");
+      this.sendMetricToGrafana("cpu", cpuValue, "gauge", "%");
 
-      requests += Math.floor(Math.random() * 200) + 1;
-      sendMetricToGrafana("requests", requests, "sum", "1");
+      this.requests += Math.floor(Math.random() * 200) + 1;
+      this.sendMetricToGrafana("requests", this.requests, "sum", "1");
 
-      latency += Math.floor(Math.random() * 200) + 1;
-      sendMetricToGrafana("latency", latency, "sum", "ms");
+      this.latency += Math.floor(Math.random() * 200) + 1;
+      this.sendMetricToGrafana("latency", this.latency, "sum", "ms");
     }, 1000);
   }
 
