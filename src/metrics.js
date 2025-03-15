@@ -1,4 +1,5 @@
 const config = require("./config");
+const os = require("os");
 
 class Metrics {
   requests = 0;
@@ -21,10 +22,14 @@ class Metrics {
 
   constructor() {}
 
-  static interval() {
+  interval() {
     setInterval(() => {
-      const cpuValue = Math.floor(Math.random() * 100) + 1;
+      const cpuValue = this.getCpuUsagePercentage();
       this.sendMetricToGrafana("cpu", cpuValue, "gauge", "%");
+
+      const memoryValue = Math.round(this.getMemoryUsagePercentage());
+      //console.log("Memory Usage Value:", memoryValue, typeof memoryValue);
+      this.sendMetricToGrafana("memory", memoryValue, "gauge", "%");
 
       this.requests += Math.floor(Math.random() * 200) + 1;
       this.sendMetricToGrafana("requests", this.requests, "sum", "1");
@@ -32,6 +37,19 @@ class Metrics {
       this.latency += Math.floor(Math.random() * 200) + 1;
       this.sendMetricToGrafana("latency", this.latency, "sum", "ms");
     }, 1000);
+  }
+
+  getCpuUsagePercentage() {
+    const cpuUsage = os.loadavg()[0] / os.cpus().length;
+    return cpuUsage.toFixed(2) * 100;
+  }
+
+  getMemoryUsagePercentage() {
+    const totalMemory = os.totalmem();
+    const freeMemory = os.freemem();
+    const usedMemory = totalMemory - freeMemory;
+    const memoryUsage = (usedMemory / totalMemory) * 100;
+    return memoryUsage.toFixed(2);
   }
 
   sendMetricToGrafana(metricName, metricValue, type, unit) {
@@ -70,11 +88,11 @@ class Metrics {
     }
 
     const body = JSON.stringify(metric);
-    fetch(`${config.url}`, {
+    fetch(`${config.metrics.url}`, {
       method: "POST",
       body: body,
       headers: {
-        Authorization: `Bearer ${config.apiKey}`,
+        Authorization: `Bearer ${config.metrics.apiKey}`,
         "Content-Type": "application/json",
       },
     })
@@ -95,4 +113,5 @@ class Metrics {
   }
 }
 
-module.exports = Metrics;
+const metric = new Metrics();
+module.exports = metric;
