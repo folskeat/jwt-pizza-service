@@ -3,7 +3,7 @@ const config = require("../config.js");
 const { Role, DB } = require("../database/database.js");
 const { authRouter } = require("./authRouter.js");
 const { asyncHandler, StatusCodeError } = require("../endpointHelper.js");
-//const Metrics = require("../metrics.js");
+const metric = require("../metrics.js");
 
 const orderRouter = express.Router();
 
@@ -80,6 +80,7 @@ orderRouter.endpoints = [
 // getMenu
 orderRouter.get(
   "/menu",
+  metric.track("getMenu"),
   asyncHandler(async (req, res) => {
     res.send(await DB.getMenu());
   })
