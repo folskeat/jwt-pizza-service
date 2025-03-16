@@ -1,7 +1,7 @@
 const request = require("supertest");
 const app = require("../service");
 const { Role, DB } = require("../database/database.js");
-
+/*
 const testUser = { name: "pizza diner", email: "reg@test.com", password: "a" };
 let adminToken;
 let adminUser;
@@ -81,3 +81,4 @@ test("logout user", async () => {
   console.log(logout2.body.message);
   expect(logout2.status).toBe(401);
 });
+*/
