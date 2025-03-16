@@ -50,7 +50,7 @@ class Metrics {
       Object.keys(this.requests).forEach((method) => {
         this.sendMetricToGrafanaObject(
           "requests",
-          this.requests.method[endpoint],
+          this.requests.method[method],
           {
             method,
           }
