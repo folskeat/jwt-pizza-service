@@ -38,7 +38,9 @@ class Metrics {
       this.sendMetricToGrafana("latency", this.latency, "sum", "ms");
 
       Object.keys(this.requests).forEach((endpoint) => {
+        const method = req.method;
         this.sendMetricToGrafanaObject("requests", this.requests[endpoint], {
+          method,
           endpoint,
         });
       });
