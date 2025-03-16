@@ -38,7 +38,7 @@ class Metrics {
       this.sendMetricToGrafana("latency", this.latency, "sum", "ms");
 
       Object.keys(this.requests).forEach((endpoint) => {
-        this.sendMetricToGrafana("requests", this.requests[endpoint], {
+        this.sendMetricToGrafanaObject("requests", this.requests[endpoint], {
           endpoint,
         });
       });
@@ -60,7 +60,7 @@ class Metrics {
 
   track(endpoint) {
     return (req, res, next) => {
-      requests[endpoint] = (this.requests[endpoint] || 0) + 1;
+      this.requests[endpoint] = (this.requests[endpoint] || 0) + 1;
       console.log(`Tracking ${endpoint} request`);
       next();
     };
@@ -126,7 +126,7 @@ class Metrics {
       });
   }
 
-  sendMetricToGrafana(metricName, metricValue, attributes) {
+  sendMetricToGrafanaObject(metricName, metricValue, attributes) {
     attributes = { ...attributes, source: config.source };
 
     const metric = {
