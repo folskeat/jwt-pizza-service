@@ -3,6 +3,7 @@ const os = require("os");
 
 class Metrics {
   requests = {};
+  HTTPrequests = {};
   latency = 0;
 
   /*
@@ -38,19 +39,17 @@ class Metrics {
       this.sendMetricToGrafana("latency", this.latency, "sum", "ms");
 
       Object.keys(this.requests).forEach((endpoint) => {
-        this.sendMetricToGrafanaObject(
-          "requests",
-          this.requests.endpoint[endpoint],
-          {
-            endpoint,
-          }
-        );
+        console.log(endpoint, " has ", this.requests[endpoint]);
+        this.sendMetricToGrafanaObject("requests", this.requests[endpoint], {
+          endpoint,
+        });
       });
 
-      Object.keys(this.requests).forEach((method) => {
+      Object.keys(this.HTTPrequests).forEach((method) => {
+        console.log(method, " has ", this.HTTPrequests[method]);
         this.sendMetricToGrafanaObject(
-          "requests",
-          this.requests.method[method],
+          "HTTPrequests",
+          this.HTTPrequests[method],
           {
             method,
           }
@@ -76,13 +75,12 @@ class Metrics {
     return (req, res, next) => {
       const method = req.method;
 
+      console.log(method);
+      this.HTTPrequests[method] = (this.HTTPrequests[method] || 0) + 1;
       //Track endpoints
-      this.requests.endpoint[endpoint] =
-        (this.requests.endpoint[endpoint] || 0) + 1;
+      this.requests[endpoint] = (this.requests[endpoint] || 0) + 1;
       console.log(`Tracking ${endpoint} request`);
 
-      //Track methods
-      this.requests.method[method] = (this.requests.method[method] || 0) + 1;
       next();
     };
   }

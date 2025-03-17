@@ -89,6 +89,7 @@ orderRouter.get(
 // addMenuItem
 orderRouter.put(
   "/menu",
+  metric.track("addMenuItem"),
   authRouter.authenticateToken,
   asyncHandler(async (req, res) => {
     if (!req.user.isRole(Role.Admin)) {
@@ -104,6 +105,7 @@ orderRouter.put(
 // getOrders
 orderRouter.get(
   "/",
+  metric.track("getOrders"),
   authRouter.authenticateToken,
   asyncHandler(async (req, res) => {
     res.json(await DB.getOrders(req.user, req.query.page));
@@ -113,6 +115,7 @@ orderRouter.get(
 // createOrder
 orderRouter.post(
   "/",
+  metric.track("createOrder"),
   authRouter.authenticateToken,
   asyncHandler(async (req, res) => {
     const orderReq = req.body;

@@ -1,4 +1,3 @@
-/*
 const request = require("supertest");
 const app = require("../service");
 const { Role, DB } = require("../database/database.js");
@@ -82,4 +81,3 @@ test("logout user", async () => {
   console.log(logout2.body.message);
   expect(logout2.status).toBe(401);
 });
-*/
