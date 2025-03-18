@@ -139,7 +139,6 @@ orderRouter.post(
     if (r.ok) {
       // Get the moneys
       let sumPrice = 0;
-      let sumPizzas = 0;
       for (let i = 0; i < order.items.length; i++) {
         sumPrice = sumPrice + order.items[i].price;
       }
