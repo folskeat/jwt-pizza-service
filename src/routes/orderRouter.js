@@ -118,8 +118,11 @@ orderRouter.post(
   metric.track("createOrder"),
   authRouter.authenticateToken,
   asyncHandler(async (req, res) => {
+    const start = Date.now();
+    console.log("What's up?");
     const orderReq = req.body;
     const order = await DB.addDinerOrder(req.user, orderReq);
+    console.log(order);
     const r = await fetch(`${config.factory.url}/api/order`, {
       method: "POST",
       headers: {
@@ -134,8 +137,23 @@ orderRouter.post(
     const j = await r.json();
     console.log(r);
     if (r.ok) {
+      // Get the moneys
+      let sumPrice = 0;
+      let sumPizzas = 0;
+      for (let i = 0; i < order.items.length; i++) {
+        sumPrice = sumPrice + order.items[i].price;
+      }
+      console.log("Total price: " + sumPrice);
+      metric.order(sumPrice, order.items.length);
+
       res.send({ order, reportSlowPizzaToFactoryUrl: j.reportUrl, jwt: j.jwt });
+
+      res.on("finish", () => {
+        const latency = Date.now() - start;
+        metric.trackPizzaLatency(latency);
+      });
     } else {
+      metric.orderFail();
       res.status(500).send({
         message: "Failed to fulfill order at factory",
         reportPizzaCreationErrorToPizzaFactoryUrl: j.reportUrl,

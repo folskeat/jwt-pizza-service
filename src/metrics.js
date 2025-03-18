@@ -4,6 +4,13 @@ const os = require("os");
 class Metrics {
   requests = {};
   HTTPrequests = {};
+  revenue = 0;
+  sold = 0;
+  pizzaFails = 0;
+  authSuccess = 0;
+  authFail = 0;
+  activeUsers = 0;
+  pizzaLatency = 0;
   latency = 0;
 
   /*
@@ -35,18 +42,15 @@ class Metrics {
       //this.requests += Math.floor(Math.random() * 200) + 1;
       //this.sendMetricToGrafana("requests", this.requests, "sum", "1");
 
-      this.latency += Math.floor(Math.random() * 200) + 1;
-      this.sendMetricToGrafana("latency", this.latency, "sum", "ms");
-
       Object.keys(this.requests).forEach((endpoint) => {
-        console.log(endpoint, " has ", this.requests[endpoint]);
+        //console.log(endpoint, " has ", this.requests[endpoint]);
         this.sendMetricToGrafanaObject("requests", this.requests[endpoint], {
           endpoint,
         });
       });
 
       Object.keys(this.HTTPrequests).forEach((method) => {
-        console.log(method, " has ", this.HTTPrequests[method]);
+        //console.log(method, " has ", this.HTTPrequests[method]);
         this.sendMetricToGrafanaObject(
           "HTTPrequests",
           this.HTTPrequests[method],
@@ -55,6 +59,25 @@ class Metrics {
           }
         );
       });
+
+      let rich = this.revenue * 100;
+
+      this.sendMetricToGrafana("sold_pizzas", this.sold, "sum", "1");
+      this.sendMetricToGrafana("revenue", parseInt(rich), "sum", "1");
+      this.sendMetricToGrafana("failed_pizzas", this.pizzaFails, "sum", "1");
+      this.sendMetricToGrafana("auth_success", this.authSuccess, "sum", "1");
+      this.sendMetricToGrafana("auth_fail", this.authFail, "sum", "1");
+
+      this.sendMetricToGrafana("active_users", this.activeUsers, "sum", "1");
+      this.sendMetricToGrafana("pizza_latency", this.pizzaLatency, "sum", "ms");
+      this.sendMetricToGrafana("latency", this.latency, "sum", "ms");
+
+      console.log("Revenue: ", this.revenue);
+      console.log("Sold: ", this.sold);
+      console.log("Failed: ", this.pizzaFails);
+
+      console.log("Pizza Latency: " + this.pizzaLatency);
+      console.log("Latency: " + this.latency);
     }, 1000);
   }
 
@@ -73,16 +96,49 @@ class Metrics {
 
   track(endpoint) {
     return (req, res, next) => {
+      const start = Date.now();
       const method = req.method;
 
-      console.log(method);
+      //console.log(method);
       this.HTTPrequests[method] = (this.HTTPrequests[method] || 0) + 1;
       //Track endpoints
       this.requests[endpoint] = (this.requests[endpoint] || 0) + 1;
-      console.log(`Tracking ${endpoint} request`);
+      //console.log(`Tracking ${endpoint} request`);
 
+      res.on("finish", () => {
+        this.latency = Date.now() - start;
+      });
       next();
     };
+  }
+
+  order(price, pizzas) {
+    this.revenue = this.revenue + price;
+    this.sold = this.sold + pizzas;
+  }
+
+  orderFail() {
+    this.pizzaFails = this.pizzaFails + 1;
+  }
+
+  auth(status) {
+    if (status) {
+      this.authSuccess = this.authSuccess + 1;
+    } else {
+      this.authFail = this.authFail + 1;
+    }
+  }
+
+  activeUser(status) {
+    if (status) {
+      this.activeUsers = this.activeUsers + 1;
+    } else {
+      this.activeUsers = this.activeUsers - 1;
+    }
+  }
+
+  trackPizzaLatency(time) {
+    this.pizzaLatency = time;
   }
 
   sendMetricToGrafana(metricName, metricValue, type, unit) {
@@ -137,7 +193,7 @@ class Metrics {
             );
           });
         } else {
-          console.log(`Pushed ${metricName}`);
+          //console.log(`Pushed ${metricName}`);
         }
       })
       .catch((error) => {
@@ -198,7 +254,7 @@ class Metrics {
         if (!response.ok) {
           console.error("Failed to push metrics data to Grafana");
         } else {
-          console.log(`Pushed ${metricName}`);
+          //console.log(`Pushed ${metricName}`);
         }
       })
       .catch((error) => {
