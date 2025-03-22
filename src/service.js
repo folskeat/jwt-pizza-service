@@ -4,9 +4,12 @@ const orderRouter = require("./routes/orderRouter.js");
 const franchiseRouter = require("./routes/franchiseRouter.js");
 const version = require("./version.json");
 const config = require("./config.js");
+const logger = require("./logger");
 
 const app = express();
+
 app.use(express.json());
+app.use(logger.httpLogger);
 app.use(setAuthUser);
 app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", req.headers.origin || "*");
@@ -42,7 +45,27 @@ app.get("/", (req, res) => {
     message: "welcome to JWT Pizza",
     version: version.version,
   });
+  res.send({ hello: req.params.name });
 });
+
+//Check any get endpoint
+
+/*
+app.use("*", (req, res) => {
+  res.send({ get: "get_request" });
+});
+*/
+
+//Tests
+app.get("/:name", (req, res) => {
+  res.send({ hello: req.params.name });
+  console.log("Hello");
+});
+
+app.get("/hello/:name", (req, res) => {
+  res.send({ hello: req.params.name });
+});
+// End tests
 
 app.use("*", (req, res) => {
   res.status(404).json({
