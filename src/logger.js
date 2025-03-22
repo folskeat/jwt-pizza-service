@@ -33,7 +33,7 @@ class Logger {
   // 3. Factory Requests
   factoryLogger = (status, headers, body) => {
     const logData = {
-      from: "Pizza Factory",
+      factory: "JWT Pizza Factory",
       status: status,
       headers: headers,
       body: body,
