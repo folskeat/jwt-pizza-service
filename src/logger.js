@@ -34,7 +34,7 @@ class Logger {
   factoryLogger = (status, headers, body) => {
     const logData = {
       factory: "JWT Pizza Factory",
-      status: status,
+      statusCode: status,
       headers: headers,
       body: body,
     };
