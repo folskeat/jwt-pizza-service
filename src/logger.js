@@ -32,7 +32,6 @@ class Logger {
 
   // 3. Factory Requests
   factoryLogger = (status, headers, body) => {
-    console.log("pee");
     const logData = {
       from: "Pizza Factory",
       status: status,
