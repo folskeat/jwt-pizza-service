@@ -61,6 +61,7 @@ class Metrics {
       });
 
       let rich = this.revenue * 100;
+      this.activeUsers = 0;
 
       this.sendMetricToGrafana("sold_pizzas", this.sold, "sum", "1");
       this.sendMetricToGrafana("revenue", parseInt(rich), "sum", "1");
