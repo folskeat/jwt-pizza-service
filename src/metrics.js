@@ -61,7 +61,7 @@ class Metrics {
       });
 
       let rich = this.revenue * 100;
-      this.activeUsers = 0;
+      //this.activeUsers = 0;
 
       this.sendMetricToGrafana("sold_pizzas", this.sold, "sum", "1");
       this.sendMetricToGrafana("revenue", parseInt(rich), "sum", "1");
@@ -79,6 +79,7 @@ class Metrics {
 
       //console.log("Pizza Latency: " + this.pizzaLatency);
       //console.log("Latency: " + this.latency);
+      //console.log("Active Users: " + this.activeUsers);
     }, 1000);
   }
 
