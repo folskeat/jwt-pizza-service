@@ -87,6 +87,28 @@ orderRouter.get(
   })
 );
 
+// Chaos testing
+let enableChaos = false;
+orderRouter.put(
+  "/chaos/:state",
+  metric.track("chaos"),
+  authRouter.authenticateToken,
+  asyncHandler(async (req, res) => {
+    if (req.user.isRole(Role.Admin)) {
+      enableChaos = req.params.state === "true";
+    }
+
+    res.json({ chaos: enableChaos });
+  })
+);
+
+orderRouter.post("/", (req, res, next) => {
+  if (enableChaos && Math.random() < 0.5) {
+    throw new StatusCodeError("Chaos monkey", 500);
+  }
+  next();
+});
+
 // addMenuItem
 orderRouter.put(
   "/menu",

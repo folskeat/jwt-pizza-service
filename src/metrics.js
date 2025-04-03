@@ -36,7 +36,7 @@ class Metrics {
       this.sendMetricToGrafana("cpu", cpuValue, "gauge", "%");
 
       const memoryValue = Math.round(this.getMemoryUsagePercentage());
-      //console.log("Memory Usage Value:", memoryValue, typeof memoryValue);
+
       this.sendMetricToGrafana("memory", memoryValue, "gauge", "%");
 
       //this.requests += Math.floor(Math.random() * 200) + 1;
@@ -144,6 +144,7 @@ class Metrics {
   }
 
   sendMetricToGrafana(metricName, metricValue, type, unit) {
+    //console.log(metricName, " ", metricValue);
     const metric = {
       resourceMetrics: [
         {
@@ -204,6 +205,8 @@ class Metrics {
   }
 
   sendMetricToGrafanaObject(metricName, metricValue, attributes) {
+    console.log(metricName, " ", metricValue);
+
     attributes = { ...attributes, source: config.source };
 
     const metric = {

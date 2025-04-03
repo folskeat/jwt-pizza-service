@@ -120,7 +120,7 @@ authRouter.put(
     const user = await DB.getUser(email, password);
     const auth = await setAuth(user);
     res.json({ user: user, token: auth });
-    console.log("Login!");
+
     metric.activeUser(true);
   })
 );
@@ -133,7 +133,7 @@ authRouter.delete(
   asyncHandler(async (req, res) => {
     await clearAuth(req);
     res.json({ message: "logout successful" });
-    console.log("Logout!");
+
     metric.activeUser(false);
   })
 );
