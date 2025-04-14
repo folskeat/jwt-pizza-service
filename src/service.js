@@ -48,25 +48,6 @@ app.get("/", (req, res) => {
   res.send({ hello: req.params.name });
 });
 
-//Check any get endpoint
-
-/*
-app.use("*", (req, res) => {
-  res.send({ get: "get_request" });
-});
-*/
-
-//Tests
-app.get("/:name", (req, res) => {
-  res.send({ hello: req.params.name });
-  console.log("Hello");
-});
-
-app.get("/hello/:name", (req, res) => {
-  res.send({ hello: req.params.name });
-});
-// End tests
-
 app.use("*", (req, res) => {
   res.status(404).json({
     message: "unknown endpoint",

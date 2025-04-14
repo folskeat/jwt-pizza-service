@@ -121,6 +121,10 @@ authRouter.put(
     const auth = await setAuth(user);
     res.json({ user: user, token: auth });
 
+    if (res.user != user) {
+      return res.status(403).json({ message: "unauthorized" });
+    }
+
     metric.activeUser(true);
   })
 );

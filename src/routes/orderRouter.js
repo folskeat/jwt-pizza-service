@@ -144,6 +144,7 @@ orderRouter.post(
     const start = Date.now();
 
     const orderReq = req.body;
+
     const order = await DB.addDinerOrder(req.user, orderReq);
 
     const r = await fetch(`${config.factory.url}/api/order`, {
@@ -161,9 +162,17 @@ orderRouter.post(
     logger.factoryLogger(r.status, r.headers, r.body);
     const j = await r.json();
 
+    // Prevent 0 pricing
     if (r.ok) {
       let sumPrice = 0;
       for (let i = 0; i < order.items.length; i++) {
+        if (order.items[i].price <= 0.0) {
+          metric.orderFail();
+          res.status(500).send({
+            message: "Failed to fulfill order at factory",
+            reportPizzaCreationErrorToPizzaFactoryUrl: j.reportUrl,
+          });
+        }
         sumPrice = sumPrice + order.items[i].price;
       }
 
